@@ -18,10 +18,11 @@ export class DialogResponse {
   private user : boolean;
   private text : string;
   private ce : any;
+  private imageUrl : string;
   private arr : Array<any> = [];
   private payload : Object;
 
-  constructor (text, user : boolean, ce, payload) {
+  constructor (text, user : boolean, ce, imageUrl, payload) {
     this.user = user;
     this.text = text;
     this.ce = ce;
@@ -32,6 +33,7 @@ export class DialogResponse {
           highlight : ce[i].highlight, sourceUrl : ce[i].sourceUrl, title : ce[i].title});
       }
     }
+    this.imageUrl = imageUrl;
     this.payload = payload;
   }
 
@@ -45,6 +47,10 @@ export class DialogResponse {
 
   public getCe () {
     return this.arr;
+  }
+
+  public getImageUrl() {
+    return this.imageUrl;
   }
 
   public getPayload () {

@@ -44,6 +44,9 @@ import {PayloadComponent} from './payload';
               </div>
             </div>
           </div>
+          <div *ngIf='!segment.isUser() && segment.getImageUrl()'>
+              <img width='200px' src='{{segment.getImageUrl()}}'/>
+          </div>
           <div class='clear'></div>
           <div *ngIf='segment.isUser() && segment == segments[segments.length - 1]' class='load'></div>
         </div>
@@ -97,7 +100,7 @@ export class AppComponent {
         this.langData = data;
         this.segments.push (new DialogResponse (
           this.langData.Description,
-          false, null, null));
+          false, null, null, null));
       },
       error => {
         let lang_url = 'locale/en.json';
@@ -106,7 +109,7 @@ export class AppComponent {
             this.langData = data;
             this.segments.push (new DialogResponse (
               this.langData.Description,
-            false, null, null));
+            false, null, null, null));
           },
           error => alert (JSON.stringify (error)));
       });
@@ -316,7 +319,7 @@ export class AppComponent {
     let input = {'text': q};
     let payload = {input, context};
     // Add the user utterance to the list of chat segments
-    this.segments.push (new DialogResponse (q, true, null, payload));
+    this.segments.push (new DialogResponse (q, true, null, null, payload));
     // Call the method which calls the proxy for the message api
     this.callConversationService (chatColumn, payload);
   }
@@ -328,6 +331,7 @@ export class AppComponent {
   private callConversationService (chatColumn, payload) {
     let responseText = '';
     let ce : any = null;
+    let imageUrl : String = null;
 
     // Send the user utterance to dialog, also send previous context
     this._dialogService.message (this.workspace_id, payload).subscribe (
@@ -348,9 +352,10 @@ export class AppComponent {
               // responseText = data1.output.text.length >= 1 && !data1.output.text[0] ?
               // data1.output.text.join(' ').trim() : data1.output.text[0]; // tslint:disable-line max-line-length
             }
+            imageUrl = data1.output.imageUrl;
           }
         }
-        this.segments.push (new DialogResponse (responseText, false, ce, data1));
+        this.segments.push (new DialogResponse (responseText, false, ce, imageUrl, data1));
         chatColumn.classList.remove ('loading');
         if (this.timer) {
           clearTimeout (this.timer);
@@ -363,7 +368,7 @@ export class AppComponent {
       },
       error => {
         let serviceDownMsg = this.langData.Log;
-        this.segments.push (new DialogResponse (serviceDownMsg, false, ce, this.langData.NResponse));
+        this.segments.push (new DialogResponse (serviceDownMsg, false, ce, null, this.langData.NResponse));
         chatColumn.classList.remove ('loading');
       });
   }
