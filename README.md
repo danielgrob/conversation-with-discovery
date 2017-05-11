@@ -1,5 +1,43 @@
 # Conversation with Discovery [![Build Status](https://travis-ci.org/watson-developer-cloud/conversation-with-discovery.svg?branch=master)](http://travis-ci.org/watson-developer-cloud/conversation-with-discovery)
 
+## Ideas
+* use case definieren
+* dialog modelieren in watson conversation
+* integration in facebook messenger / slack / ... => botkit
+* sprachausgabe
+
+## Use Case
+=> ich brauche eine autoversicherung  
+<= sie wollen eine autoversicherung kaufen. habe ich sie richtig verstanden?  
+=> ja  
+<= welche marke und welches modell haben sie?  
+=> opel adam  
+<= action bild  
+<= entspricht das ihrem fahrzeug  
+=> ja  
+<= in welchem jahr wurde das fahrzeug in verkehr gesetzt?  
+=> 2014  
+<= action offerte details  
+<= das würde sie CHF 750.- kosten. wollen sie die versicherung abschliessen?  
+=> das ist zu teuer  
+<= wollen sie kollisionskasko verzichten, dann reduziert sich der preis auf CHF 500.-  
+=> was bedeutet das?  
+<= ohne kollisionskasko haben sie keinen rundumschutz (erklärvideo).  
+<= offerte details  
+<= wollen sie teilkasko für CHF 500.- kaufen  
+=> doch lieber vollkasko  
+<= offerte details  
+<= das würde sie CHF 750.- kosten. wollen sie die versicherung abschliessen?  
+=> ja gerne  
+<= wie heissen sie?  
+=> sara meier  
+<= wo wohnen sie?  
+=> in basel  
+<= sind sie die sara meier aus der passwangstrasse 58  
+=> ja  
+<= policenübersicht inkl. policennummer  
+<= sie sind nun vollkakso versichert. wir senden ihnen in den nächsten tagen die police per post zu.  
+
 This application demonstrates how you can combine the [Conversation](http://www.ibm.com/watson/developercloud/doc/conversation/index.shtml) and [Discovery](http://www.ibm.com/watson/developercloud/doc/discovery/#overview) services to allow customers, employees or the public to get answers to a wide range of questions about a product, service or other topic using plain English. First, users pose a questions to the Conversation service. If Conversation is not able to confidently answer, the app executes a call to Discovery, which to provides a list of helpful answers.
 
 ## How the app works
