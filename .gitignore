@@ -30,3 +30,4 @@ app.log
 bin/
 logs/
 .idea/
+/.apt_generated/
