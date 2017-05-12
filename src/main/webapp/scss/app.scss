@@ -811,3 +811,51 @@ text-decoration:none;
   width: 100%;
  }
 }
+
+.tender-component {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+}
+
+.tender-component.top {
+  background: rgba(0,0,144,.05);
+  border-bottom: 2px solid #004480;
+  text-align: center;
+  font-weight: bold;
+}
+
+.tender-component.top a {
+  background: url("https://www.baloisedirect.ch/.resources/baloise-cms-baloisedirect/img/icon_package_video.svg") no-repeat 0 0;
+  background-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.tender-component-title {
+  margin-left: 20px;
+}
+
+.tender-component.included {
+  border-bottom: 1px solid rgba(0,68,128,.2);
+}
+
+.tender-component.excluded {
+  color: rgba(0,68,128,.4);
+}
+
+.tender-component.included {
+  background-color: rgba(0,0,144,.05);
+  background-image: url("https://www.baloisedirect.ch/.resources/baloise-cms-baloisedirect/img/icon_package_check.svg");
+  background-repeat: no-repeat;
+  background-size: 20px;
+}
+
+.tender-product-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  margin-bottom: 10px;
+}

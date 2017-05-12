@@ -17,12 +17,13 @@ import {DialogService} from './dialog.service';
 import {Http, Headers} from 'angular2/http';
 import {CeDocComponent} from './ce.docs';
 import {PayloadComponent} from './payload';
+import {TenderComponent} from './tender';
 
 /*
  * Main entry point to the application. This component is responsible for the entire page layout.
  */
 @Component ({
-  directives: [CeDocComponent, PayloadComponent],
+  directives: [CeDocComponent, PayloadComponent, TenderComponent],
   providers: [DialogService],
   selector: 'chat-app',
   template: `
@@ -32,7 +33,11 @@ import {PayloadComponent} from './payload';
   </div>
   <div id='parent' class='parentDiv' (window:resize)='onResize($event)'>
       <div id='scrollingChat'>
-        <div id='segments' *ngFor='#segment of segments'>
+        <div id='segments' *ngFor='let segment of segments'>
+          <div *ngIf='!segment.isUser() && segment.getImageUrl()'>
+              <img width='200px' src='{{segment.getImageUrl()}}'/>
+          </div>
+          <tender *ngFor='let tender of segment.getTenders()' [tender]='tender'></tender>
           <div [class]='segment.isUser() ? "from-user" :
             (segment !== segments[segments.length - 1] ? "from-watson" : "from-watson-latest")'>
             <p class='padding' [innerHtml]='segment.getText()'></p>
@@ -40,12 +45,9 @@ import {PayloadComponent} from './payload';
               <span title='Click to Collapse' (click)='CeToggle($event)' style='border : none;'
               class='expcoll'>Collapse Results <span class='sign'>-</span></span>
               <div class='toggleCe'>
-                <ce-doc *ngFor='#doc of segment.getCe()' [doc]='doc'></ce-doc>
+                <ce-doc *ngFor='let doc of segment.getCe()' [doc]='doc'></ce-doc>
               </div>
             </div>
-          </div>
-          <div *ngIf='!segment.isUser() && segment.getImageUrl()'>
-              <img width='200px' src='{{segment.getImageUrl()}}'/>
           </div>
           <div class='clear'></div>
           <div *ngIf='segment.isUser() && segment == segments[segments.length - 1]' class='load'></div>
@@ -100,7 +102,7 @@ export class AppComponent {
         this.langData = data;
         this.segments.push (new DialogResponse (
           this.langData.Description,
-          false, null, null, null));
+          false, null, null, null, null));
       },
       error => {
         let lang_url = 'locale/en.json';
@@ -109,7 +111,7 @@ export class AppComponent {
             this.langData = data;
             this.segments.push (new DialogResponse (
               this.langData.Description,
-            false, null, null, null));
+            false, null, null, null, null));
           },
           error => alert (JSON.stringify (error)));
       });
@@ -319,7 +321,7 @@ export class AppComponent {
     let input = {'text': q};
     let payload = {input, context};
     // Add the user utterance to the list of chat segments
-    this.segments.push (new DialogResponse (q, true, null, null, payload));
+    this.segments.push (new DialogResponse (q, true, null, null, null, payload));
     // Call the method which calls the proxy for the message api
     this.callConversationService (chatColumn, payload);
   }
@@ -332,6 +334,7 @@ export class AppComponent {
     let responseText = '';
     let ce : any = null;
     let imageUrl : String = null;
+    let tenders : any;
 
     // Send the user utterance to dialog, also send previous context
     this._dialogService.message (this.workspace_id, payload).subscribe (
@@ -353,9 +356,10 @@ export class AppComponent {
               // data1.output.text.join(' ').trim() : data1.output.text[0]; // tslint:disable-line max-line-length
             }
             imageUrl = data1.output.imageUrl;
+            tenders = data1.output.tenders;
           }
         }
-        this.segments.push (new DialogResponse (responseText, false, ce, imageUrl, data1));
+        this.segments.push (new DialogResponse (responseText, false, ce, imageUrl, tenders, data1));
         chatColumn.classList.remove ('loading');
         if (this.timer) {
           clearTimeout (this.timer);
@@ -368,7 +372,7 @@ export class AppComponent {
       },
       error => {
         let serviceDownMsg = this.langData.Log;
-        this.segments.push (new DialogResponse (serviceDownMsg, false, ce, null, this.langData.NResponse));
+        this.segments.push (new DialogResponse (serviceDownMsg, false, ce, null, null, this.langData.NResponse));
         chatColumn.classList.remove ('loading');
       });
   }

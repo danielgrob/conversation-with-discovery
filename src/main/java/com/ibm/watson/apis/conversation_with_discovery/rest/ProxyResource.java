@@ -39,9 +39,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * The Class ProxyResource.
@@ -127,12 +128,47 @@ public class ProxyResource {
             Map<String, Object> action = (Map<String, Object>) output.get("action");
             if (action.containsKey("call_discovery")) {
                 callDiscovery(response);
-            } else if (action.containsKey("call_image")) {
+            }
+            if (action.containsKey("call_image")) {
                 callImage(response);
+            }
+            if (action.containsKey("call_top_offer")) {
+                callTopOffer(response);
+            }
+            if (action.containsKey("call_show_products")) {
+                callShowProducts(response);
             }
         }
 
+        callTopOffer(response);
+
         return response;
+    }
+
+    private void callTopOffer(MessageResponse response) {
+        response.getOutput().put("tenders", Collections.singletonList(createProducts().get(0)));
+    }
+
+    private void callShowProducts(MessageResponse response) {
+        response.getOutput().put("tenders", createProducts());
+    }
+
+    private List<Map<String, Object>> createProducts() {
+        return Stream.of(
+                createTender("Vollkasko Paket", 250, 250, 500),
+                createTender("Teilkasko Paket", 250, 250, 0),
+                createTender("Haftpflicht Paket", 250, 0, 0)
+        ).collect(Collectors.toList());
+    }
+
+    private Map<String, Object> createTender(String title, int haftpflicht, int teilkasko, int vollkasko) {
+        return Stream.of(
+                new SimpleEntry<>("title", title),
+                new SimpleEntry<>("haftpflicht", haftpflicht),
+                new SimpleEntry<>("teilkasko", teilkasko),
+                new SimpleEntry<>("vollkasko", vollkasko),
+                new SimpleEntry<>("total", haftpflicht + teilkasko + vollkasko)
+        ).collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue));
     }
 
     private void callDiscovery(MessageResponse response) throws Exception {
