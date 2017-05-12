@@ -27,8 +27,8 @@ apply plugin: 'findbugs'
 apply plugin: 'com.moowork.node'
 apply plugin: 'com.moowork.gulp'
 
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 dependencies {
     compile 'javax.ws.rs:jsr311-api:1.1.1'
