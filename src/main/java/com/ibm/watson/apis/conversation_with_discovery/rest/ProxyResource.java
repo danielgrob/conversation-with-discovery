@@ -140,8 +140,6 @@ public class ProxyResource {
             }
         }
 
-        callTopOffer(response);
-
         return response;
     }
 
